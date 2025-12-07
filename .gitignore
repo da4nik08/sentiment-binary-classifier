@@ -1,4 +1,4 @@
 *-checkpoint*
 *.pyc
 **/.ipynb_checkpoints/
-data/
+dataset/
