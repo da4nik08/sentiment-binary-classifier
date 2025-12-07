@@ -2,3 +2,6 @@
 *.pyc
 **/.ipynb_checkpoints/
 dataset/
+mlruns/
+mlartifacts/
+mlflow.db
