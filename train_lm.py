@@ -71,7 +71,7 @@ def train_model(config_path):
     optimizer = torch.optim.AdamW([
         {"params": encoder_decay, "lr": cfg["optimizer"]["encoder_lr"], "weight_decay": cfg["optimizer"]["weight_decay"]},
         {"params": encoder_no_decay, "lr": cfg["optimizer"]["encoder_lr"], "weight_decay": 0.0},
-        {"params": model.fc1.parameters(), "lr": "lr": cfg["optimizer"]["head_lr"], "weight_decay": cfg["optimizer"]["weight_decay"]},
+        {"params": model.fc1.parameters(), "lr": cfg["optimizer"]["head_lr"], "weight_decay": cfg["optimizer"]["weight_decay"]},
     ])
     
     mw = MetricsWriter(model, model_name=cfg["logging"]["run_name"], save_treshold=cfg["logging"]["save_threshold"])
