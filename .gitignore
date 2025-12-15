@@ -5,3 +5,5 @@ dataset/
 mlruns/
 mlartifacts/
 mlflow.db
+model_svs/
+runs/
