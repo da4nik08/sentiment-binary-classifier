@@ -113,16 +113,13 @@ This setup allows a fair comparison between:
 | MiniLM (fine-tuned) | End-to-end Transformer | **0.8972** | **0.8937** | **0.9016** | **0.8976** |
 
 ## Tensorboard
+**Training vs. Validation Loss**
+![Training vs. Validation Loss](https://github.com/da4nik08/sentiment-binary-classifier/blob/feature/analysis-and-docs/assets/tv_loss.png)
 
-## Inference
+**Validation Accuracy**
+![Validation Accuracy](https://github.com/da4nik08/sentiment-binary-classifier/blob/feature/analysis-and-docs/assets/val_acc.png)
 
-The project supports running inference on new, unseen text using a trained
-MiniLM-based sentiment classifier.
-
-Inference is performed using:
-- the trained model checkpoint
-- the same tokenizer and preprocessing pipeline as during training
-- a YAML configuration file
+![Validation F1 score](https://github.com/da4nik08/sentiment-binary-classifier/blob/feature/analysis-and-docs/assets/val_f1.png)
 
 ---
 
