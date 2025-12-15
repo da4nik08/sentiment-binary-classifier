@@ -2,10 +2,32 @@ Binary classification of movie reviews from the IMDB dataset into **positive** a
 
 ## Project Overview
 
-- Dataset: IMDB reviews (text + label)
-- Task: binary sentiment classification (positive / negative)
-- Stack: Python, NumPy, pandas, scikit-learn (and optionally PyTorch / TensorFlow in future)
-- Goal: build and evaluate baseline and improved models for sentiment analysis.
+- **Dataset**: IMDB reviews (text + label)
+- **Task**: binary sentiment classification (positive / negative)
+- **Stack**: Python, NumPy, pandas, scikit-learn (and optionally PyTorch / TensorFlow in future)
+- **Goal**:
+    - build strong baselines using classical ML
+    - improve performance using Transformer-based models
+    - compare models using consistent metrics
+    - create a clean, reproducible ML pipeline
+
+## Tech Stack
+
+### Core
+- Python 3.10+
+- NumPy
+- pandas
+- scikit-learn
+
+### NLP & Deep Learning
+- PyTorch
+- Hugging Face Transformers
+- sentence-transformers (MiniLM)
+- NLTK
+
+### Experiment Tracking & Visualization
+- TensorBoard (NN)
+- (optionally) MLflow (ML)
 
 ## Installation
 
@@ -15,3 +37,64 @@ cd sentiment-binary-classifier
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
+```
+
+## Data Preprocessing
+
+Text preprocessing steps include:
+- converting text to lowercase
+- HTML tag removal
+- emoji and unicode symbol removal
+- punctuation normalization
+- stopword removal (NLTK)
+- review length trimming with sentence boundary preservation
+
+## Models
+
+### 1. Classical ML Baselines (Pretrained Embeddings)
+
+For baseline models, **text is encoded using pretrained sentence embeddings**
+from the model:
+
+**`sentence-transformers/all-MiniLM-L6-v2`**
+
+The embeddings are generated using the **original pretrained model**
+(without fine-tuning), and then used as fixed feature vectors for
+classical machine learning classifiers.
+
+**Pipeline**:
+1. Text preprocessing
+2. Sentence embedding extraction (MiniLM, frozen)
+3. Classical ML classifier training
+
+**Used classifiers**:
+- Logistic Regression
+- Linear SVM
+- KNN (for comparison)
+
+This setup allows a fair comparison between:
+- classical ML on high-quality semantic embeddings
+- end-to-end fine-tuned Transformer model
+
+---
+
+### 2. Transformer-Based Model (Fine-Tuned)
+
+**Model**: `all-MiniLM-L6-v2`
+
+**Architecture**:
+- Pretrained MiniLM encoder
+- Mean pooling over token embeddings
+- Dropout layer
+- Fully connected layer (1 neuron)
+- BCEWithLogitsLoss
+
+**Training strategy**:
+- Encoder weights are mostly frozen
+- Last 2 transformer layers are fine-tuned
+- Separate learning rates:
+  - encoder layers
+  - classification head
+- Weight decay
+- Gradient clipping
+- Cosine Annealing learning rate scheduler

@@ -17,9 +17,9 @@ stop_words = set(stopwords.words("english"))
 def clean_review(text: str) -> str:
     text = text.lower()                
     text = re.sub(r"<.*?>", " ", text) 
-    text = text.replace("\\'", "'").replace('\\"', '"').replace("\\n", " ")  # Прибираємо escape-послідовності типу \', \", \\n
+    text = text.replace("\\'", "'").replace('\\"', '"').replace("\\n", " ")
 
-    emoji_pattern = re.compile(  #  Прибираємо смайлики та юнікодні emoji
+    emoji_pattern = re.compile(
         "["                   
         "\U0001F600-\U0001F64F"  
         "\U0001F300-\U0001F5FF"  
@@ -32,14 +32,14 @@ def clean_review(text: str) -> str:
     )
     text = emoji_pattern.sub(" ", text)
 
-    text = text.replace("’", "'").replace("‘", "'") # нормалізуємо лапки
+    text = text.replace("’", "'").replace("‘", "'")
 
-    text = re.sub(r"(?<![a-z0-9])'(?![a-z0-9])", " ", text)  # видаляємо апострофи, що НЕ між літерами/цифрами
-    text = re.sub(r"\s+'(?=[a-z0-9])", " ", text)   # 'word → word
-    text = re.sub(r"(?<=[a-z0-9])'\s+", " ", text)  # word' → word
+    text = re.sub(r"(?<![a-z0-9])'(?![a-z0-9])", " ", text)
+    text = re.sub(r"\s+'(?=[a-z0-9])", " ", text)
+    text = re.sub(r"(?<=[a-z0-9])'\s+", " ", text)
     
     text = re.sub(r"[^a-z0-9\s'\.\,\!\?]", " ", text)
-    text = re.sub(r"\s+", " ", text).strip()        # Видаляємо повторювані пробіли
+    text = re.sub(r"\s+", " ", text).strip()
 
     return text
 
@@ -52,7 +52,7 @@ def trim_review(text, max_words=400):
     words = text.split()
     if len(words) <= max_words:
         return text
-    if len(words) > (max_words + 50): # якщо . ! ? немає
+    if len(words) > (max_words + 50):
         return " ".join(words[:max_words])
     
     trimmed = words[:max_words]
