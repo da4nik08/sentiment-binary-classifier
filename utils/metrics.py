@@ -1,8 +1,10 @@
 import time
+import torch
 from datetime import datetime
 from torch.utils.tensorboard import SummaryWriter
 from torchsummary import summary
 from sklearn.metrics import precision_score, f1_score, recall_score, accuracy_score
+import numpy as np
 
 
 class MetricsWriter():
@@ -19,7 +21,7 @@ class MetricsWriter():
         self.model_name = model_name
         self.model_type, self.module = model.get_info()
         self.timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.writer = SummaryWriter('/runs/' + self.model_name + '{}_{}_{}'.format(self.model_type, self.module, self.timestamp))
+        self.writer = SummaryWriter('runs/' + self.model_name + '{}_{}_{}'.format(self.model_type, self.module, self.timestamp))
 
     def get_list_metrics(self):
         return self.loss_val, self.loss_train, self.acc_val
@@ -35,7 +37,7 @@ class MetricsWriter():
         print("Time per epoch {}s".format(elapsed))
 
     def get_best_epoch_by_map(self):
-        return self.f1.index(max(self.mAP))
+        return self.f1.index(max(self.f1))
 
     def writer_step(self, loss, vloss, recall, precision, f1, acc):
         print('LOSS train {} valid {}'.format(loss, vloss))
@@ -62,7 +64,7 @@ class MetricsWriter():
 
     def save_model(self, model):
         if (self.epoch) % self.save_treshold == 0:
-            model_path = '/model_svs/' + self.model_name + '_{}_{}_{}_{}'.format(self.model_type, 
+            model_path = 'model_svs/' + self.model_name + '_{}_{}_{}_{}'.format(self.model_type, 
                                                                                                 self.module, self.timestamp, 
                                                                                                 self.epoch)
             torch.save(model.state_dict(), model_path)
@@ -74,12 +76,12 @@ class Metrics():
         self.all_predicted = np.array([])
 
     def batch_step(self, actualv, predictedv):
-        self.all_actual = np.concatenate([self.all_actual, actualv.numpy(force=True)])
-        self.all_predicted = np.concatenate([self.all_predicted, predictedv.numpy(force=True)])
+        self.all_actual = np.concatenate([self.all_actual, actualv.detach().cpu().numpy().ravel()])   # actualv.numpy(force=True)])
+        self.all_predicted = np.concatenate([self.all_predicted, predictedv.detach().cpu().numpy().ravel()])  # .ravel() 2d to 1d (test)
 
     def get_metrics(self):
-        recall = recall_score(self.all_actual, self.all_predicted, average='weighted', zero_division=0)
-        precision = precision_score(self.all_actual, self.all_predicted, average='weighted', zero_division=0)
-        f1 = f1_score(self.all_actual, self.all_predicted, average='weighted', zero_division=0)
+        recall = recall_score(self.all_actual, self.all_predicted)
+        precision = precision_score(self.all_actual, self.all_predicted)
+        f1 = f1_score(self.all_actual, self.all_predicted)
         accuracy = accuracy_score(self.all_actual, self.all_predicted)
         return recall, precision, f1, accuracy
