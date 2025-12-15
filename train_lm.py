@@ -6,7 +6,7 @@ from transformers import AutoTokenizer
 from utils.custom_dataset import TokenizedTextDataset
 from utils.metrics import MetricsWriter
 from sklearn.model_selection import train_test_split
-from models.mini_lm_classifier import MiniLMSentimentClassifier
+from models.minilm_classifier import MiniLMSentimentClassifier
 from training_funtions.train_lm_loop import train
 from utils.load_cfg import load_config
 from pathlib import Path

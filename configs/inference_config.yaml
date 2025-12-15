@@ -11,3 +11,6 @@ tokenizer:
 inference:
   batch_size: 32
   threshold: 0.5
+  text_column: review_final
+  output_path: predictions.csv
+  

@@ -2,10 +2,12 @@ import yaml
 import torch
 import pandas as pd
 from transformers import AutoTokenizer
-from models.mini_lm_classifier import MiniLMSentimentClassifier
+from models.minilm_classifier import MiniLMSentimentClassifier
 from utils.custom_dataset import TokenizedTextDataset
+from preprocess import preprocess_dataset
 from torch.utils.data import DataLoader
 from pathlib import Path
+import argparse
 from tqdm import tqdm
 from utils.load_cfg import load_config
 
@@ -30,7 +32,7 @@ def run_inference(texts: list[str], model: MiniLMSentimentClassifier, tokenizer,
         return_tensors="pt"
     )
 
-    dummy_labels = torch.zeros(len(texts))  # того ж розміру що і звичайні проте не по
+    dummy_labels = torch.zeros(len(texts))  # того ж розміру що і звичайні не використовується далі 
     dataset = TokenizedTextDataset(encoded, dummy_labels)
     loader = DataLoader(
         dataset,
@@ -70,7 +72,9 @@ def predict_from_csv(csv_path: str, text_column: str, config_path: str):
     model = load_model(cfg)
     tokenizer = AutoTokenizer.from_pretrained(cfg["model"]["name"])
 
-    df = pd.read_csv(csv_path)
+    preprocess_dataset(csv_path, 'temp_dataset')
+    processed_path = Path("dataset") / str('temp_dataset')
+    df = pd.read_csv(processed_path)
     texts = df[text_column].astype(str).tolist()
     preds = run_inference(texts, model, tokenizer, cfg)
 
@@ -79,11 +83,22 @@ def predict_from_csv(csv_path: str, text_column: str, config_path: str):
     return df
 
 
-if __name__ == "__main__":
-    output = predict_from_csv(
-        csv_path="dataset/test.csv",
-        text_column="review_final",
-        config_path="configs/inference_config.yaml"
-    )
-    output.to_csv("predictions.csv", index=False)
+def main():
+    parser = argparse.ArgumentParser(description="Run sentiment inference on CSV dataset")
+    parser.add_argument("--csv_path", type=str, required=True, help="Path to input CSV file")
+    parser.add_argument("--text_column", type=str, default=None, help="Name of the text column")
+    parser.add_argument("--config_path", type=str, default="configs/inference_config.yaml", help="Path to config YAML")
+    parser.add_argument("--output_path", type=str, default="predictions.csv", help="Path to save predictions CSV")
 
+    args = parser.parse_args()
+    cfg = load_config(args.config_path)
+
+    text_column = args.text_column or cfg.get("inference", {}).get("text_column", "review_final")
+
+    df = predict_from_csv(args.csv_path, text_column, args.config_path)
+    df.to_csv(args.output_path, index=False)
+    print(f"Predictions saved to {args.output_path}")
+
+
+if __name__ == "__main__":
+    main()

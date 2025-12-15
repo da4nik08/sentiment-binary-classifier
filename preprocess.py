@@ -77,5 +77,6 @@ def preprocess_dataset(dataset_path, result_ds_name):
 
     processed_path = Path("dataset") / str(result_ds_name)
     processed_path.parent.mkdir(parents=True, exist_ok=True)
+    data = data.drop(['sentiment', 'review_clean'], axis=1)
     data.to_csv(processed_path, index=False)
     print(f"[INFO] Датасет успішно збережено: {processed_path}")

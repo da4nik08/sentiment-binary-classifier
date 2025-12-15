@@ -111,3 +111,37 @@ This setup allows a fair comparison between:
 | Linear SVM | MiniLM embeddings | 0.83352 | 0.82757 | 0.84266 | 0.83503 |
 | XGBoost | MiniLM embeddings | 0.81952 | 0.81215 | 0.83142 | 0.82166 |
 | MiniLM (fine-tuned) | End-to-end Transformer | **0.8972** | **0.8937** | **0.9016** | **0.8976** |
+
+## Tensorboard
+
+## Inference
+
+The project supports running inference on new, unseen text using a trained
+MiniLM-based sentiment classifier.
+
+Inference is performed using:
+- the trained model checkpoint
+- the same tokenizer and preprocessing pipeline as during training
+- a YAML configuration file
+
+---
+
+### Inference
+
+**Input**:
+- Run sentiment inference on a CSV dataset using a fine-tuned MiniLM model.
+
+**Output**
+- CSV file with two additional columns:
+  - prediction — predicted label (0 or 1)
+  - probability — predicted probability of positive sentiment
+
+To run inference on a CSV file:
+```bash
+python inference.py \
+    --csv_path dataset/IMDB_small_test.csv \
+    --text_column review_final \
+    --config_path configs/inference_config.yaml \
+    --output_path predictions.csv
+
+```
