@@ -119,6 +119,7 @@ This setup allows a fair comparison between:
 **Validation Accuracy**
 ![Validation Accuracy](https://github.com/da4nik08/sentiment-binary-classifier/blob/feature/analysis-and-docs/assets/val_acc.png)
 
+**Validation F1**
 ![Validation F1 score](https://github.com/da4nik08/sentiment-binary-classifier/blob/feature/analysis-and-docs/assets/val_f1.png)
 
 ---
