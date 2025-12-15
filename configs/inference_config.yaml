@@ -1,0 +1,13 @@
+model:
+  name: sentence-transformers/all-MiniLM-L6-v2
+  checkpoint_path: model_svs/Fine_tune_last2_layers_1fc_all-MiniLM-L6-v2_Fine-tuning_20251215_095415_10
+  device: auto
+
+tokenizer:
+  max_length: 256
+  padding: true
+  truncation: true
+
+inference:
+  batch_size: 32
+  threshold: 0.5
