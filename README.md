@@ -70,7 +70,7 @@ classical machine learning classifiers.
 **Used classifiers**:
 - Logistic Regression
 - Linear SVM
-- KNN (for comparison)
+- XGBoost Classifier
 
 This setup allows a fair comparison between:
 - classical ML on high-quality semantic embeddings
@@ -98,3 +98,16 @@ This setup allows a fair comparison between:
 - Weight decay
 - Gradient clipping
 - Cosine Annealing learning rate scheduler
+
+---
+
+## Results
+
+### Model Performance Comparison
+
+| Model | Feature Representation | Accuracy | Precision | Recall | F1-score |
+|------|------------------------|----------|-----------|--------|----------|
+| Logistic Regression | MiniLM embeddings | 0.82986 | 0.82595 | 0.83594 | 0.83089 |
+| Linear SVM | MiniLM embeddings | 0.83352 | 0.82757 | 0.84266 | 0.83503 |
+| XGBoost | MiniLM embeddings | 0.81952 | 0.81215 | 0.83142 | 0.82166 |
+| MiniLM (fine-tuned) | End-to-end Transformer | **0.8972** | **0.8937** | **0.9016** | **0.8976** |
