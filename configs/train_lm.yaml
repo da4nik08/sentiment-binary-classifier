@@ -1,0 +1,29 @@
+dataset:
+  path: dataset/processed_reviews.csv
+  text_column: review_final
+  label_column: label
+  test_size: 0.2
+  random_state: 42
+
+model:
+  name: sentence-transformers/all-MiniLM-L6-v2
+  dropout: 0.2
+  unfreeze_last_n_layers: 2
+
+tokenizer:
+  max_length: 256
+
+training:
+  batch_size: 64
+  num_workers: 4
+  epochs: 10
+  device: auto
+
+optimizer:
+  encoder_lr: 2e-5
+  head_lr: 1e-4
+  weight_decay: 0.01
+
+logging:
+  run_name: Fine_tune_last2_layers_1fc_v2
+  save_threshold: 1
